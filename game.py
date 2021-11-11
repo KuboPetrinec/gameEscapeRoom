@@ -1,21 +1,32 @@
 #!/usr/bin/python3
 import states
 
-#vytvaranie dictionary ktory bude vytvarat miestnosti
-room = {
-    'name' : 'dungeon',
-    'description' : 'Nachadzas sa v tmavej zatuchnutej miestnosti bez okien, co dava tusit, ze si niekolko metrov'
-        'pod zemou. Zeby kosicky hrad? Aj to je mozne, ti prebleslo hlavou.',
-    'items' : [],
-    'exits' : []
-}
 
-# na pokracovanie hrania pouzivame premenne nie ich hodnoty
-STATE_PLAYING = 'playing'
-STATE_QUIT = 'quit'
+# slovniky budeme vidiet CELY ZIVOT !
+# vytvaranie dictionary ktory bude vytvarat miestnosti
 
 
-# vypise zakladne info o hre
+# type hinting - aky TYP bude room
+# ROBIME TO KVOLI VYVOJOVEMU PROSTREDIU ABY SOM DOSTAL ADEKVATNE METODY K PREMENNEJ
+def show_room(room: dict):
+    # dokumentacny retazec - dokumenatcia k prikazu
+    """
+    Show content of the room. (brief description)
+    The function shows the name and description of the room. It also prints the information about items, which are in
+    the room, if there are any. In the end, it prints list of exits if there are any.
+    :param room: the room to print info about. (full description)
+    :return: nothing (until we set function to return something)
+    """
+    print(f"Nachadzas sa v miesnosti {room['name']}")
+    print(f"{room['description']}")
+
+    # na pokracovanie hrania pouzivame premenne nie ich hodnoty
+    STATE_PLAYING = 'playing'
+    STATE_QUIT = 'quit'
+
+    # vypise zakladne info o hre
+
+
 def about_game():
     print("Ocitol si sa v hre Indiana Jones vytvorenej Kubom.")
     print('(c)2021 Hra by JAKUB')
@@ -29,38 +40,43 @@ def prikazy():
     print("Zoznam dostupnych prikazov :")
     print(commands)
 
+
 def rozhliadni_sa():
     print('Nachadzas sa v tmavej zatuchnutej miestnosti bez okien, co dava tusit, ze si niekolko metrov pod zemou. '
           'Zeby kosicky hrad? Aj to je mozne, ti prebleslo hlavou.')
+
 
 def show_allias():
     print("Alliasy pre prikazy:")
     print("koniec=quit/q/bye, o hre=about/info, prikazy=commands/help/?")
 
-where = None
-
-def show_room(room):
-    print(f"Nachadzas sa v miesnosti {room['name']} , {room['description']}")
 
 # varianty prikazu na ukoncenie hry
 the_end = ('', 'koniec', 'quit', 'bye', 'q')
 
 if __name__ == '__main__':
+    # init game
+    game_state = states.STATE_PLAYING
+    room = {
+        'name': 'dungeon',
+        'description': 'Nachadzas sa v tmavej zatuchnutej miestnosti bez okien, co dava tusit, ze si niekolko metrov'
+                       'pod zemou. Zeby kosicky hrad? Aj to je mozne, ti prebleslo hlavou.',
+        'items': [],
+        'exits': []
+    }
+
+    # end of init game
 
     print('''
 ===============================================================================================
                           Vitaj v hre INDIAN JONES :  ESCAPE ROOM.                                    
-Nachadzas sa v tmavej miestnosti. Nic momentalne nevidis. Musis sa odtialto dostat lebo umries!
 ===============================================================================================
     ''')
     # rendering the dark room (starting room)
     show_room(room)
-    #rozhliadni_sa()
-    #print('Nachadzas sa v tmavej zatuchnutej miestnosti bez okien, co dava tusit, ze si niekolko metrov pod zemou. '
-          #'Zeby kosicky hrad? Aj to je mozne, ti prebleslo hlavou.')
+    # ctrl + q = zobrazenie dokumentacie k funkcii
 
     # main loop
-    game_state = states.STATE_PLAYING
     line = None
 
     while game_state == states.STATE_PLAYING:
@@ -76,8 +92,8 @@ Nachadzas sa v tmavej miestnosti. Nic momentalne nevidis. Musis sa odtialto dost
         elif line in ('o hre', 'about', 'info'):
             about_game()
 
-        elif line in ('rozhliadni sa','look around'):
-            rozhliadni_sa()
+        elif line in ('rozhliadni sa', 'look around'):
+            # rozhliadni_sa()
             show_room(room)
 
         elif line in ('alias'):
