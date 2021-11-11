@@ -71,6 +71,12 @@ def show_allias():
     print("Alliasy pre prikazy:")
     print("koniec=quit/q/bye, o hre=about/info, prikazy=commands/help/?")
 
+def inventory():
+    if backpack == []:
+        print('Tvoj batoh je prazdny.')
+    else:
+        print(f"V batohu mas : {', '.join(backpack)}")
+
 
 # varianty prikazu na ukoncenie hry
 the_end = ('', 'koniec', 'quit', 'bye', 'q')
@@ -78,6 +84,8 @@ the_end = ('', 'koniec', 'quit', 'bye', 'q')
 if __name__ == '__main__':
     # init game
     game_state = states.STATE_PLAYING
+    backpack = ['figa borova','minca']
+
     room = {
         'name': 'dungeon',
         'description': 'Nachadzas sa v tmavej zatuchnutej miestnosti bez okien, co dava tusit, ze si niekolko metrov'
@@ -117,8 +125,11 @@ if __name__ == '__main__':
             # rozhliadni_sa()
             show_room(room)
 
-        elif line in ('alias'):
+        elif line == 'alias':
             show_allias()
+
+        elif line in ('inventory','inv','i'):
+            inventory()
 
         elif line in ('prikazy', 'commands', 'help', '?'):
             # prikazy()
