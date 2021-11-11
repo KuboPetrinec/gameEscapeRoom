@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import states
 
-
 # na pokracovanie hrania pouzivame premenne nie ich hodnoty
 STATE_PLAYING = 'playing'
 STATE_QUIT = 'quit'
@@ -33,6 +32,8 @@ if __name__ == '__main__':
 Nachadzas sa v tmavej miestnosti. Nic momentalne nevidis. Musis sa odtialto dostat lebo umries!
 ===============================================================================================
     ''')
+    #rendering the dark room (starting room)
+    print('Nachadzas sa v tmavej zatuchnutej miestnosti bez okien, co dava tusit, ze si niekolko metrov pod zemou. Zeby kosicky hrad? Aj to je mozne, ti prebleslo hlavou.')
 
     # main loop
     game_state = states.STATE_PLAYING
