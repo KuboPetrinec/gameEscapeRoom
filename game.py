@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import states
-
+#HRA NA CVIKA
 
 # slovniky budeme vidiet CELY ZIVOT !
 # vytvaranie dictionary ktory bude vytvarat miestnosti
