@@ -18,8 +18,8 @@ def show_room(room: dict):
     :return: nothing (until we set function to return something)
     """
 
-    #zachytenie vynimky/exception
-    #type checking
+    # zachytenie vynimky/exception
+    # type checking
     if type(room) != dict:
         print('BUBUBU')
         raise TypeError('Room is not of type dictionary')
@@ -30,18 +30,22 @@ def show_room(room: dict):
     if room['items'] == []:
         print("Nevidíš tu nič zvláštne.")
     else:
-        print('items')
+        print("Vidis tieto veci:")
+        for item in room.get('items'):
+            print(f"* {item}")
+
     if room['exits'] == []:
         print("Z tejto miestnosti neexistujú žiadne východy.")
     else:
-        print('exits')
+        print("Vidis tieto vychody:")
+        for exit in room.get('exits'):
+            print(f"* {exit}")
 
+# na pokracovanie hrania pouzivame premenne nie ich hodnoty
+STATE_PLAYING = 'playing'
+STATE_QUIT = 'quit'
 
-    # na pokracovanie hrania pouzivame premenne nie ich hodnoty
-    STATE_PLAYING = 'playing'
-    STATE_QUIT = 'quit'
-
-    # vypise zakladne info o hre
+# vypise zakladne info o hre
 
 
 def about_game():
@@ -78,8 +82,8 @@ if __name__ == '__main__':
         'name': 'dungeon',
         'description': 'Nachadzas sa v tmavej zatuchnutej miestnosti bez okien, co dava tusit, ze si niekolko metrov'
                        'pod zemou. Zeby kosicky hrad? Aj to je mozne, ti prebleslo hlavou.',
-        'items': [],
-        'exits': []
+        'items': ['papier', 'noviny'],
+        'exits': ['do zahrady']
     }
 
     # end of init game
