@@ -30,16 +30,16 @@ def show_room(room: dict):
     if room['items'] == []:
         print("Nevidíš tu nič zvláštne.")
     else:
-        print("Vidis tieto veci:")
-        for item in room.get('items'):
-            print(f"* {item}")
+        print(f"Vidis tieto vychody: {', '.join(room['items'])}")
+        # for item in room.get('items'):
+        #     print(f"{item}", sep=',', end=' ')
 
     if room['exits'] == []:
         print("Z tejto miestnosti neexistujú žiadne východy.")
     else:
-        print("Vidis tieto vychody:")
-        for exit in room.get('exits'):
-            print(f"* {exit}")
+        print(f"Vidis tieto vychody: {', '.join(room['exits'])}")
+        #for exit in room.get('exits'):
+        #    print(f"{exit}", sep=',', end=' ')
 
 # na pokracovanie hrania pouzivame premenne nie ich hodnoty
 STATE_PLAYING = 'playing'
