@@ -17,8 +17,25 @@ def show_room(room: dict):
     :param room: the room to print info about. (full description)
     :return: nothing (until we set function to return something)
     """
+
+    #zachytenie vynimky/exception
+    #type checking
+    if type(room) != dict:
+        print('BUBUBU')
+        raise TypeError('Room is not of type dictionary')
+
     print(f"Nachadzas sa v miesnosti {room['name']}")
     print(f"{room['description']}")
+
+    if room['items'] == []:
+        print("Nevidíš tu nič zvláštne.")
+    else:
+        print('items')
+    if room['exits'] == []:
+        print("Z tejto miestnosti neexistujú žiadne východy.")
+    else:
+        print('exits')
+
 
     # na pokracovanie hrania pouzivame premenne nie ich hodnoty
     STATE_PLAYING = 'playing'
