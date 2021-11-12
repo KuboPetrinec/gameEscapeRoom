@@ -1,4 +1,4 @@
-rom .features import MOVABLE, USABLE
+from .features import MOVABLE, USABLE
 
 fire_extinguisher = {
     'name': 'hasiaci pristroj',

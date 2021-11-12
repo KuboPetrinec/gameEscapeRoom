@@ -1,7 +1,9 @@
 # na pokracovanie hrania pouzivame premenne nie ich hodnoty
 
 #main state when game is playing
-STATE_PLAYING = 'playing'
+PLAYING = 'playing'
+# STATE_PLAYING = 'playing'
 
 #main state when game is finished
-STATE_QUIT = 'quit'
+QUIT = 'quit'
+# STATE_QUIT = 'quit'

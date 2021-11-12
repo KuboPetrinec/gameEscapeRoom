@@ -1,204 +1,156 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 import states
-import features
-#HRA NA CVIKA
+from typing import Dict
 
-# slovniky budeme vidiet CELY ZIVOT !
-# vytvaranie dictionary ktory bude vytvarat miestnosti
+from items import figa, coin, canister, matches, fire_extinguisher, newspaper
 
 
-# type hinting - aky TYP bude room
-# ROBIME TO KVOLI VYVOJOVEMU PROSTREDIU ABY SOM DOSTAL ADEKVATNE METODY K PREMENNEJ
-def show_room(room: dict):
-    # dokumentacny retazec - dokumenatcia k prikazu
+def show_room(room: Dict):
     """
-    Show content of the room. (brief description)
-    The function shows the name and description of the room. It also prints the information about items, which are in
-    the room, if there are any. In the end, it prints list of exits if there are any.
-    :param room: the room to print info about. (full description)
-    :return: nothing (until we set function to return something)
+    Show content of the room.
+    The function shows name and description of the room. It also prints the list of items, which are in the room, or
+    the information about there are no items in the room. Finally, it prints out also list of available exits from the
+    room or special string, when there is no exit from the room.
+    :param room: the room to print info about
     """
-
-    # zachytenie vynimky/exception
     # type checking
-    if type(room) != dict:
-        print('BUBUBU')
-        raise TypeError('Room is not of type dictionary')
+    if type(room) is not dict:
+        raise TypeError('Room is not of type dictionary.')
 
-    print(f"Nachadzas sa v miesnosti {room['name']}")
-    print(f"{room['description']}")
+    print(f'Nachádzaš sa v miestnosti {room["name"]}.')
+    print(f'{room["description"]}')
 
-    if room['items'] == []:
+    if room["exits"] == []:
+        print("Z tejto miestnosti nevedú žiadne východy.")
+
+    if room["items"] == []:
         print("Nevidíš tu nič zvláštne.")
     else:
-        print(f"Vidis tieto veci: {', '.join(room['items'])}")
-        # for item in room.get('items'):
-        #     print(f"{item}", sep=',', end=' ')
+        # print(f"Vidíš: {', '.join(room['items'])}")
+        for item in room['items']:
+            print(f"   * {item['name']}")
 
-    if room['exits'] == []:
-        print("Z tejto miestnosti neexistujú žiadne východy.")
-    else:
-        print(f"Vidis tieto vychody: {', '.join(room['exits'])}")
-        #for exit in room.get('exits'):
-        #    print(f"{exit}", sep=',', end=' ')
+    # return None
 
-# na pokracovanie hrania pouzivame premenne nie ich hodnoty
-STATE_PLAYING = 'playing'
-STATE_QUIT = 'quit'
-
-# vypise zakladne info o hre
-
-
-def about_game():
-    print("Ocitol si sa v hre Indiana Jones vytvorenej Kubom.")
-    print('(c)2021 Hra by JAKUB')
-
-
-commands = ['o hre', 'prikazy', 'koniec', 'rozhliadni sa', 'alliasy']
-
-
-# vypis vsetkych prikazov
-def prikazy():
-    print("Zoznam dostupnych prikazov :")
-    print(commands)
-
-
-def rozhliadni_sa():
-    print('Nachadzas sa v tmavej zatuchnutej miestnosti bez okien, co dava tusit, ze si niekolko metrov pod zemou. '
-          'Zeby kosicky hrad? Aj to je mozne, ti prebleslo hlavou.')
-
-
-def show_allias():
-    print("Alliasy pre prikazy:")
-    print("koniec=quit/q/bye, o hre=about/info, prikazy=commands/help/?")
-
-def inventory():
-    if backpack == []:
-        print('Tvoj batoh je prazdny.')
-    else:
-        print(f"V batohu mas : {', '.join(backpack)}")
-
-def add_item_to_backpack(line):
-    if line.startswith('vezmi'):
-        what=line.split('vezmi')[1].strip()
-        if not what:
-            print("Neviem co chces zobrat.")
-        elif what in room.get('items'):
-            print("Takuto vec nevidim v miestnosti.")
-        else:
-            room['items'].remove(what)
-            backpack.append(what)
-            print(f"Pridal si do batohu {what}")
-
-
-# varianty prikazu na ukoncenie hry
-the_end = ('', 'koniec', 'quit', 'bye', 'q')
 
 if __name__ == '__main__':
     # init game
-    name = None
-    line = None
-    game_state = states.STATE_PLAYING
-
+    game_state = states.PLAYING
+    item = None
 
     backpack = [
-        {
-            'name': 'figa borova',
-            'description': 'Borová figa. Čo viac k tomu dodať.',
-            'features': [MOVABLE]
-        },
-        {
-            'name': 'minca',
-            'description': 'Zlatá minca.',
-            'features': [MOVABLE]
-        }
+        coin,
+        figa,
+        #coin
     ]
 
     room = {
         'name': 'dungeon',
-        'description': 'Nachadzas sa v tmavej zatuchnutej miestnosti bez okien, co dava tusit, ze si niekolko metrov'
-                       'pod zemou. Zeby kosicky hrad? Aj to je mozne, ti prebleslo hlavou.',
-        'items':[
-            {
-                'name': 'kanister',
-                'description': '3l kanister s benzinnom.',
-                'features': [MOVABLE, USABLE]
-            },
-            {
-                'name':'zapalky',
-                'description': 'safety match zapalky. Zahrkal si krabickou a po jej otvoreni si nasiel len tri.',
-                'features': [MOVABLE, USABLE]
-            },
-            {
-                'name': 'hasiaci pristroj',
-                'description': 'Cervena nadoba snehoveho hasiaceho pristroja. Plumba dava vediet, ze este nebol pouzity.',
-                'features': [MOVABLE, USABLE]
-            },
-            {
-                'name': 'noviny',
-                'description': 'Bravicko do kazdej domacnosti.',
-                'features': [MOVABLE, USABLE]
-            },
+        'description': 'Nachádzaš sa v tmavej zatuchnutej miestnosti. Na kamenných stenách sa nenachádza žiadne okno, '
+                       'čo dáva tušiť, že si niekoľko metrov pod zemou. Žeby košický hrad? Aj to je možné, ti '
+                       'prebleslo hlavou.',
+        'items': [
+            canister,
+            matches,
+            fire_extinguisher,
+            newspaper
         ],
-        'exits': ['do zahrady'],
+        'exits': []
     }
 
-    # end of init game
+    # banner
+    print(" ___           _ _                         _                       ")
+    print("|_ _|_ __   __| (_) __ _ _ __   __ _      | | ___  _ __   ___  ___ ")
+    print(" | || '_ \\ / _` | |/ _` | '_ \\ / _` |  _  | |/ _ \\| '_ \\ / _ \\/ __|")
+    print(" | || | | | (_| | | (_| | | | | (_| | | |_| | (_) | | | |  __/\\__ \\")
+    print("|___|_| |_|\\__,_|_|\\__,_|_| |_|\\__,_|  \\___/ \\___/|_| |_|\\___||___/")
+    print("                       and his Great Escape                        ")
+    print()
 
-    print('''
-===============================================================================================
-                          Vitaj v hre INDIAN JONES :  ESCAPE ROOM.                                    
-===============================================================================================
-    ''')
-    # rendering the dark room (starting room)
+    # rendering the dark room
     show_room(room)
-    # ctrl + q = zobrazenie dokumentacie k funkcii
 
     # main loop
-    line = None
-
-    while game_state == states.STATE_PLAYING:
+    while game_state == states.PLAYING:
         # normalizing string
         line = input('> ').lower().strip()
 
+        # empty input
         if line == '':
             continue
 
-        elif line in ('', 'koniec', 'quit', 'bye', 'q'):
-            game_state = states.STATE_QUIT
+        # quit game
+        elif line in ('koniec', 'quit', 'bye', 'q', 'exit'):
+            game_state = states.QUIT
 
-        elif line in ('o hre', 'about', 'info'):
-            about_game()
+        # about game
+        elif line in ('o hre', 'about', 'info', '?'):
+            print('(c)2021 created by mirek')
+            print('Ďalšie veľké dobrodružstvo Indiana Jonesa. Tentokrát zápasí s jazykom Python v tmavej miestnosti.')
 
-        elif line in ('rozhliadni sa', 'look around'):
-            # rozhliadni_sa()
+        # show commands
+        elif line in ('prikazy', 'commands', 'help', 'pomoc'):
+            print('Zoznam príkazov v hre:')
+            print('* koniec - ukončí rozohratú hru')
+            print('* o hre - zobrazí informácie o hre')
+            print('* prikazy - zobrazí príkazy, ktoré sa dajú použiť v hre')
+            print('* rozhliadni sa - vypíše opis miestnosti, v ktorej sa hráč práve nachádza')
+            print('* vezmi - vezme predmet z miestnosti a vloží si ho do batohu')
+
+        # render room
+        elif line in ("rozhliadni sa", "look around", "kukaj het"):
             show_room(room)
 
-        elif line == 'alias':
-            show_allias()
+        # show inventory
+        elif line in ("inventar", "i", "inventory", 'batoh'):
+            if backpack == []:
+                print("Batoh je prázdny.")
+            else:
+                print("V batohu máš:")
+                for item in backpack:
+                    print(f"   * {item['name']}")
 
-        elif line in ('inventory','inv','i'):
-            inventory()
-
-        #elif line in ('vezmi papier','add'):
+        # take item
         elif line.startswith('vezmi'):
             name = line.split('vezmi')[1].strip()
-            if name == '':
-                print("Neviem co chces zobrat.")
-            elif name not in room.get('items'):
-                print("Takuto vec nevidim v miestnosti.")
-            else:
-                room['items'].remove(name)
-                backpack.append(name)
-                print(f"Pridal si do batohu {name}")
 
-        elif line in ('prikazy', 'commands', 'help', '?'):
-            # prikazy()
-            print("Zoznam prikazov v hre:")
-            print("* koniec - ukonci rozohratu hru")
-            print("* o hre - vypise informacie o hre")
-            print("# prikazy - vypise vsetky dostupne prikazy")
-            print("* rozhliadni sa - vypise popis miestnosti")
-            print("* alliasy : koniec=quit/q/bye, o hre=about/info, prikazy=commands/help/?, rozhliadni sa=look around")
+            # if the name was not entered
+            if name == '':
+                print('Neviem, čo chceš zobrať.')
+            else:
+                # search for item in room items
+                for item in room['items']:
+                    if name == item['name']:
+                        # take item
+                        room['items'].remove(item)
+                        backpack.append(item)
+                        print(f'Do batohu si si vložil predmet {name}.')
+                        break
+                # item not found
+                else:
+                    print('Taký predmet tu nikde nevidím.')
+
+        # remove item
+        elif line.startswith('vyloz'):
+            name = line.split('vyloz')[1].strip()
+
+            # if the name was not entered
+            if name == '':
+                print('Neviem, čo chceš vylozit.')
+            else:
+                # search for item in backpack
+                for item in backpack:
+                    if name == item['name']:
+                        backpack.remove(item)
+                        room['items'].append(item)
+                        print(f'Z batohu si vylozil {name}.')
+                        break
+                else:
+                        print(f"Nemozes vylozit {name} z batohu, pretoze tam nie je.")
+
+        # unknown commands
         else:
-            print("Taky prikaz nepoznam")
+            print('Taký príkaz nepoznám.')
+
+    # game credits
+    print('(c)2021 by mirek mocný programátor')
