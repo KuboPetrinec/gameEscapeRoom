@@ -2,8 +2,9 @@
 import states
 from typing import Dict
 
-from items import figa, coin, canister, matches, fire_extinguisher, newspaper
-
+from commands import cmd_about, cmd_commands, cmd_show_inventory, cmd_drop_item, cmd_take_item, cmd_quit, cmd_examine_item
+from items import figa, coin, canister, matches, fire_extinguisher, newspaper, door
+from helpers import get_item_by_name
 
 def show_room(room: Dict):
     """
@@ -35,16 +36,20 @@ def show_room(room: Dict):
 
 if __name__ == '__main__':
     # init game
-    game_state = states.PLAYING
-    item = None
+    context = {
+        'state': states.PLAYING,
+        'backpack': {
+            'items':[],
+            'max': 2,
+        },
+        'world': {},
+        'room': {}
+    }
 
-    backpack = [
-        coin,
-        figa,
-        #coin
-    ]
+    context['backpack']['items'].append(figa)
+    context['backpack']['items'].append(coin)
 
-    room = {
+    context['room'] = {
         'name': 'dungeon',
         'description': 'Nachádzaš sa v tmavej zatuchnutej miestnosti. Na kamenných stenách sa nenachádza žiadne okno, '
                        'čo dáva tušiť, že si niekoľko metrov pod zemou. Žeby košický hrad? Aj to je možné, ti '
@@ -69,10 +74,10 @@ if __name__ == '__main__':
     print()
 
     # rendering the dark room
-    show_room(room)
+    show_room(context['room'])
 
     # main loop
-    while game_state == states.PLAYING:
+    while context['state'] == states.PLAYING:
         # normalizing string
         line = input('> ').lower().strip()
 
@@ -82,82 +87,38 @@ if __name__ == '__main__':
 
         # quit game
         elif line in ('koniec', 'quit', 'bye', 'q', 'exit'):
-            game_state = states.QUIT
+            cmd_quit(context)
 
         # about game
         elif line in ('o hre', 'about', 'info', '?'):
-            print('(c)2021 created by mirek')
-            print('Ďalšie veľké dobrodružstvo Indiana Jonesa. Tentokrát zápasí s jazykom Python v tmavej miestnosti.')
+            cmd_about(context)
 
         # show commands
         elif line in ('prikazy', 'commands', 'help', 'pomoc'):
-            print('Zoznam príkazov v hre:')
-            print('* koniec - ukončí rozohratú hru')
-            print('* o hre - zobrazí informácie o hre')
-            print('* prikazy - zobrazí príkazy, ktoré sa dajú použiť v hre')
-            print('* rozhliadni sa - vypíše opis miestnosti, v ktorej sa hráč práve nachádza')
-            print('* vezmi - vezme predmet z miestnosti a vloží si ho do batohu')
-            print('* poloz - polozi zvoleny predmet do miestnosti')
-
+            cmd_commands(context)
 
         # render room
         elif line in ("rozhliadni sa", "look around", "kukaj het"):
-            show_room(room)
+            show_room(context['room'])
 
         # show inventory
         elif line in ("inventar", "i", "inventory", 'batoh'):
-            if backpack == []:
-                print("Batoh je prázdny.")
-            else:
-                print("V batohu máš:")
-                for item in backpack:
-                    print(f"   * {item['name']}")
+            cmd_show_inventory(context)
+
+        # drop item
+        elif line.startswith('poloz'):
+            cmd_drop_item(line, context)
 
         # take item
         elif line.startswith('vezmi'):
-            name = line.split('vezmi')[1].strip()
+            cmd_take_item(line, context)
 
-            # if the name was not entered
-            if name == '':
-                print('Neviem, čo chceš zobrať.')
-            else:
-                # search for item in room items
-                for item in room['items']:
-                    if name == item['name']:
-                        #is the item movable
-                        if MOVABLE in item['features']:
-                            # take item
-                            room['items'].remove(item)
-                            backpack.append(item)
-                            print(f'Do batohu si si vložil predmet {name}.')
-                        else:
-                            print(f'Predmet {item} sa neda vziat.')
-                        break
-                # item not found
-                else:
-                    print('Taký predmet tu nikde nevidím.')
-
-        # drop the item
-        elif line.startswith('poloz'):
-            name = line.split('poloz')[1].strip()
-
-            # if the name was not entered
-            if name == '':
-                print('Neviem, čo chceš polozit.')
-            else:
-                # search for item in backpack
-                for item in backpack:
-                    if name == item['name']:
-                        backpack.remove(item)
-                        room['items'].append(item)
-                        print(f'Do miestnosti si polozil {name}.')
-                        break
-                else:
-                        print(f"Predmet {name} pri sebe nemas.")
+        elif line.startswith('preskumaj'):
+            cmd_examine_item(line, context)
 
         # unknown commands
         else:
             print('Taký príkaz nepoznám.')
 
     # game credits
-    print('(c)2021 param pam pam')
+    print('(c)2021 by mirek mocný programátor')

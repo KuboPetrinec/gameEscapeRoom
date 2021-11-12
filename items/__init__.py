@@ -6,4 +6,4 @@ from .matches import matches
 from .newspaper import newspaper
 from .door import door
 
-from item
+from .features import MOVABLE, USABLE
