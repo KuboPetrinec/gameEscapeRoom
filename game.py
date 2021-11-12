@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import states
+import features
 #HRA NA CVIKA
 
 # slovniky budeme vidiet CELY ZIVOT !
@@ -30,7 +31,7 @@ def show_room(room: dict):
     if room['items'] == []:
         print("Nevidíš tu nič zvláštne.")
     else:
-        print(f"Vidis tieto vychody: {', '.join(room['items'])}")
+        print(f"Vidis tieto veci: {', '.join(room['items'])}")
         # for item in room.get('items'):
         #     print(f"{item}", sep=',', end=' ')
 
@@ -77,21 +78,69 @@ def inventory():
     else:
         print(f"V batohu mas : {', '.join(backpack)}")
 
+def add_item_to_backpack(line):
+    if line.startswith('vezmi'):
+        what=line.split('vezmi')[1].strip()
+        if not what:
+            print("Neviem co chces zobrat.")
+        elif what in room.get('items'):
+            print("Takuto vec nevidim v miestnosti.")
+        else:
+            room['items'].remove(what)
+            backpack.append(what)
+            print(f"Pridal si do batohu {what}")
+
 
 # varianty prikazu na ukoncenie hry
 the_end = ('', 'koniec', 'quit', 'bye', 'q')
 
 if __name__ == '__main__':
     # init game
+    name = None
+    line = None
     game_state = states.STATE_PLAYING
-    backpack = ['figa borova','minca']
+
+
+    backpack = [
+        {
+            'name': 'figa borova',
+            'description': 'Borová figa. Čo viac k tomu dodať.',
+            'features': [MOVABLE]
+        },
+        {
+            'name': 'minca',
+            'description': 'Zlatá minca.',
+            'features': [MOVABLE]
+        }
+    ]
 
     room = {
         'name': 'dungeon',
         'description': 'Nachadzas sa v tmavej zatuchnutej miestnosti bez okien, co dava tusit, ze si niekolko metrov'
                        'pod zemou. Zeby kosicky hrad? Aj to je mozne, ti prebleslo hlavou.',
-        'items': ['papier', 'noviny'],
-        'exits': ['do zahrady']
+        'items':[
+            {
+                'name': 'kanister',
+                'description': '3l kanister s benzinnom.',
+                'features': [MOVABLE, USABLE]
+            },
+            {
+                'name':'zapalky',
+                'description': 'safety match zapalky. Zahrkal si krabickou a po jej otvoreni si nasiel len tri.',
+                'features': [MOVABLE, USABLE]
+            },
+            {
+                'name': 'hasiaci pristroj',
+                'description': 'Cervena nadoba snehoveho hasiaceho pristroja. Plumba dava vediet, ze este nebol pouzity.',
+                'features': [MOVABLE, USABLE]
+            },
+            {
+                'name': 'noviny',
+                'description': 'Bravicko do kazdej domacnosti.',
+                'features': [MOVABLE, USABLE]
+            },
+        ],
+        'exits': ['do zahrady'],
     }
 
     # end of init game
@@ -130,6 +179,18 @@ if __name__ == '__main__':
 
         elif line in ('inventory','inv','i'):
             inventory()
+
+        #elif line in ('vezmi papier','add'):
+        elif line.startswith('vezmi'):
+            name = line.split('vezmi')[1].strip()
+            if name == '':
+                print("Neviem co chces zobrat.")
+            elif name not in room.get('items'):
+                print("Takuto vec nevidim v miestnosti.")
+            else:
+                room['items'].remove(name)
+                backpack.append(name)
+                print(f"Pridal si do batohu {name}")
 
         elif line in ('prikazy', 'commands', 'help', '?'):
             # prikazy()
