@@ -53,7 +53,8 @@ if __name__ == '__main__':
             canister,
             matches,
             fire_extinguisher,
-            newspaper
+            newspaper,
+            door
         ],
         'exits': []
     }
@@ -123,10 +124,14 @@ if __name__ == '__main__':
                 # search for item in room items
                 for item in room['items']:
                     if name == item['name']:
-                        # take item
-                        room['items'].remove(item)
-                        backpack.append(item)
-                        print(f'Do batohu si si vložil predmet {name}.')
+                        #is the item movable
+                        if MOVABLE in item['features']:
+                            # take item
+                            room['items'].remove(item)
+                            backpack.append(item)
+                            print(f'Do batohu si si vložil predmet {name}.')
+                        else:
+                            print(f'Predmet {item} sa neda vziat.')
                         break
                 # item not found
                 else:
