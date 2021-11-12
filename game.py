@@ -96,6 +96,8 @@ if __name__ == '__main__':
             print('* prikazy - zobrazí príkazy, ktoré sa dajú použiť v hre')
             print('* rozhliadni sa - vypíše opis miestnosti, v ktorej sa hráč práve nachádza')
             print('* vezmi - vezme predmet z miestnosti a vloží si ho do batohu')
+            print('* poloz - polozi zvoleny predmet do miestnosti')
+
 
         # render room
         elif line in ("rozhliadni sa", "look around", "kukaj het"):
@@ -130,27 +132,27 @@ if __name__ == '__main__':
                 else:
                     print('Taký predmet tu nikde nevidím.')
 
-        # remove item
-        elif line.startswith('vyloz'):
-            name = line.split('vyloz')[1].strip()
+        # drop the item
+        elif line.startswith('poloz'):
+            name = line.split('poloz')[1].strip()
 
             # if the name was not entered
             if name == '':
-                print('Neviem, čo chceš vylozit.')
+                print('Neviem, čo chceš polozit.')
             else:
                 # search for item in backpack
                 for item in backpack:
                     if name == item['name']:
                         backpack.remove(item)
                         room['items'].append(item)
-                        print(f'Z batohu si vylozil {name}.')
+                        print(f'Do miestnosti si polozil {name}.')
                         break
                 else:
-                        print(f"Nemozes vylozit {name} z batohu, pretoze tam nie je.")
+                        print(f"Predmet {name} pri sebe nemas.")
 
         # unknown commands
         else:
             print('Taký príkaz nepoznám.')
 
     # game credits
-    print('(c)2021 by mirek mocný programátor')
+    print('(c)2021 param pam pam')
