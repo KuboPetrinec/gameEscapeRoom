@@ -6,7 +6,6 @@ def _exec(context: dict, param: str):
     for cmd in commands:
         print(f'* {cmd["name"]} - {cmd["description"]}')
 
-
 cmd = {
     'name': 'prikazy',
     'description': 'zobrazí príkazy, ktoré sa dajú použiť v hre',

@@ -1,3 +1,6 @@
+from helpers import get_item_by_name
+from items import MOVABLE
+
 def _exec(context: dict, name: str):
     backpack = context['backpack']
     room = context['room']

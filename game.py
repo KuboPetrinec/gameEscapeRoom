@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 import states
-from typing import Dict
 
-from commands import commands
 from helpers import show_room
 from items import figa, coin, canister, matches, fire_extinguisher, newspaper, door
-from helpers import get_item_by_name
+from commands import commands
 
 def parse(line: str, commands: list) -> tuple:
     for cmd in commands:
@@ -78,42 +76,6 @@ if __name__ == '__main__':
         else:
             callback = command['exec']
             callback(context, param)
-
-
-        # quit game
-        # elif line in ('koniec', 'quit', 'bye', 'q', 'exit'):
-        #     cmd_quit(context)
-        #
-        # # about game
-        # elif line in ('o hre', 'about', 'info', '?'):
-        #     cmd_about(context)
-        #
-        # # show commands
-        # elif line in ('prikazy', 'commands', 'help', 'pomoc'):
-        #     cmd_commands(context)
-        #
-        # # render room
-        # elif line in ("rozhliadni sa", "look around", "kukaj het"):
-        #     show_room(context['room'])
-        #
-        # # show inventory
-        # elif line in ("inventar", "i", "inventory", 'batoh'):
-        #     cmd_show_inventory(context)
-        #
-        # # drop item
-        # elif line.startswith('poloz'):
-        #     cmd_drop_item(line, context)
-        #
-        # # take item
-        # elif line.startswith('vezmi'):
-        #     cmd_take_item(line, context)
-        #
-        # elif line.startswith('preskumaj'):
-        #     cmd_examine_item(line, context)
-        #
-        # # unknown commands
-        # else:
-        #     print('Taký príkaz nepoznám.')
 
     # game credits
     print('(c)2021')

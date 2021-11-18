@@ -1,5 +1,9 @@
+from helpers import show_room
+
+
 def _exec(context: dict, param: str):
     show_room(context['room'])
+
 
 cmd = {
     'name': "rozhliadni sa",
