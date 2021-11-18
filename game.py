@@ -2,37 +2,24 @@
 import states
 from typing import Dict
 
-from commands import cmd_about, cmd_commands, cmd_show_inventory, cmd_drop_item, cmd_take_item, cmd_quit, cmd_examine_item
+from commands import commands
+from helpers import show_room
 from items import figa, coin, canister, matches, fire_extinguisher, newspaper, door
 from helpers import get_item_by_name
 
-def show_room(room: Dict):
-    """
-    Show content of the room.
-    The function shows name and description of the room. It also prints the list of items, which are in the room, or
-    the information about there are no items in the room. Finally, it prints out also list of available exits from the
-    room or special string, when there is no exit from the room.
-    :param room: the room to print info about
-    """
-    # type checking
-    if type(room) is not dict:
-        raise TypeError('Room is not of type dictionary.')
+def parse(line: str, commands: list) -> tuple:
+    for cmd in commands:
+        for alias in cmd['aliases'] + (cmd['name'],):
+            if line.startswith(alias):
+                # take out the parameter from the line
+                param = line.split(alias)[1].strip()
+                return cmd, param
 
-    print(f'Nachádzaš sa v miestnosti {room["name"]}.')
-    print(f'{room["description"]}')
+    return (None, None)
 
-    if room["exits"] == []:
-        print("Z tejto miestnosti nevedú žiadne východy.")
+   #print('Tento prikaz nepoznam.')
 
-    if room["items"] == []:
-        print("Nevidíš tu nič zvláštne.")
-    else:
-        # print(f"Vidíš: {', '.join(room['items'])}")
-        for item in room['items']:
-            print(f"   * {item['name']}")
-
-    # return None
-
+# tu bola funkcia show_room
 
 if __name__ == '__main__':
     # init game
@@ -85,40 +72,48 @@ if __name__ == '__main__':
         if line == '':
             continue
 
-        # quit game
-        elif line in ('koniec', 'quit', 'bye', 'q', 'exit'):
-            cmd_quit(context)
-
-        # about game
-        elif line in ('o hre', 'about', 'info', '?'):
-            cmd_about(context)
-
-        # show commands
-        elif line in ('prikazy', 'commands', 'help', 'pomoc'):
-            cmd_commands(context)
-
-        # render room
-        elif line in ("rozhliadni sa", "look around", "kukaj het"):
-            show_room(context['room'])
-
-        # show inventory
-        elif line in ("inventar", "i", "inventory", 'batoh'):
-            cmd_show_inventory(context)
-
-        # drop item
-        elif line.startswith('poloz'):
-            cmd_drop_item(line, context)
-
-        # take item
-        elif line.startswith('vezmi'):
-            cmd_take_item(line, context)
-
-        elif line.startswith('preskumaj'):
-            cmd_examine_item(line, context)
-
-        # unknown commands
-        else:
+        command, param = parse(line, commands)
+        if command is None:
             print('Taký príkaz nepoznám.')
+        else:
+            callback = command['exec']
+            callback(context, param)
+
+
+        # quit game
+        # elif line in ('koniec', 'quit', 'bye', 'q', 'exit'):
+        #     cmd_quit(context)
+        #
+        # # about game
+        # elif line in ('o hre', 'about', 'info', '?'):
+        #     cmd_about(context)
+        #
+        # # show commands
+        # elif line in ('prikazy', 'commands', 'help', 'pomoc'):
+        #     cmd_commands(context)
+        #
+        # # render room
+        # elif line in ("rozhliadni sa", "look around", "kukaj het"):
+        #     show_room(context['room'])
+        #
+        # # show inventory
+        # elif line in ("inventar", "i", "inventory", 'batoh'):
+        #     cmd_show_inventory(context)
+        #
+        # # drop item
+        # elif line.startswith('poloz'):
+        #     cmd_drop_item(line, context)
+        #
+        # # take item
+        # elif line.startswith('vezmi'):
+        #     cmd_take_item(line, context)
+        #
+        # elif line.startswith('preskumaj'):
+        #     cmd_examine_item(line, context)
+        #
+        # # unknown commands
+        # else:
+        #     print('Taký príkaz nepoznám.')
 
     # game credits
-    print('(c)2021 by mirek mocný programátor')
+    print('(c)2021')
